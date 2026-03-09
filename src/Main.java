@@ -1,11 +1,23 @@
 import javax.swing.*;
 import java.awt.*;
 
+//used to check if the user actually inputted numbers
+Boolean isStringInt(String input) {
+    try {
+        Integer.parseInt(input);
+    } catch(NumberFormatException e) {
+        return false;
+    }
+    return true;
+}
+
 void main() {
     JFrame frame = new JFrame("FCFS Simulator");
-    frame.setSize(800,800);
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
+
+    //Set main window to be invisible since we arent using it
+    frame.setVisible(false);
+
+    // Create the queue for storing the processes to be used with the FCFS algorithm
     QueueImplementation<Process> queue = new QueueImplementation<>();
     JOptionPane.showMessageDialog(frame,
             "the FCFS (First-Come-First-Serve) Scheduling Simulation! \n\n" +
@@ -13,10 +25,29 @@ void main() {
             "Welcome to",
             JOptionPane.INFORMATION_MESSAGE);
 
-    int numberOfProcesses = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter the number of processes: "));
-    for (int i = 0; i < numberOfProcesses; i++) {
-        int arrivalTime = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter arrival time for process " + (i + 1)));
-        int burstTime = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter burst time for process " + (i + 1)));
+    int noOfProc = 0, arrivalTime = 0, burstTime = 0;
+    String noOfProcInput, arrivalTimeInput, burstTimeInput;
+    //Gather information for processes
+
+    // Gather the user input until it is not an empty string
+    do {
+        noOfProcInput = JOptionPane.showInputDialog(frame, "Enter the number of processes: ");
+        if (noOfProcInput == null) { System.exit(0); }
+    } while (Objects.equals(noOfProcInput, "") || !isStringInt(noOfProcInput));
+    noOfProc = Integer.parseInt(noOfProcInput);;
+
+    // Gather arrivalTime and burstTIme for every process
+    for (int i = 0; i < noOfProc; i++) {
+        do {
+            arrivalTimeInput = JOptionPane.showInputDialog(frame, "Enter arrival time for process " + (i + 1));
+        } while (Objects.equals(arrivalTimeInput, "") || !isStringInt(arrivalTimeInput));
+        if (arrivalTimeInput == null) { System.exit(0); } else { arrivalTime = Integer.parseInt(arrivalTimeInput); };
+
+        do {
+            burstTimeInput = JOptionPane.showInputDialog(frame, "Enter burst time for process " + (i + 1));
+        } while (Objects.equals(burstTimeInput, "") || !isStringInt(burstTimeInput));
+        if (burstTimeInput == null) { System.exit(0); } else { burstTime = Integer.parseInt(burstTimeInput); }
+
         Process process = new Process(i + 1, arrivalTime, burstTime);
         queue.enqueue(process);
     }
@@ -24,8 +55,7 @@ void main() {
     //RUN FCFS
     FCFSAlgorithm fcfs = new FCFSAlgorithm(queue);
     fcfs.run();
-
-
-
+    //window hangs around so exit the program manually
+    System.exit(0);
 }
 

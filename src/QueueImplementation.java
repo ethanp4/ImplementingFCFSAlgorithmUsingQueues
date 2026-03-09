@@ -39,6 +39,7 @@ public class QueueImplementation<T> implements QueueInterface<T> {
         }
     }
 
+    // Remove the head from the queue and return it
     public T dequeue() {
         if (isEmpty()) {
             throw new IllegalStateException("The queue is empty.");
@@ -51,6 +52,7 @@ public class QueueImplementation<T> implements QueueInterface<T> {
         return data;
     }
 
+    // Get the head of the queue
     public T getFront() {
         if (isEmpty()) {
             throw new IllegalStateException("The queue is empty.");
@@ -58,13 +60,16 @@ public class QueueImplementation<T> implements QueueInterface<T> {
         return head.data;
     }
 
+    // Check if the queue is empty
     public boolean isEmpty() {
         return head == null;
     }
 
+    // Clear the queue
     public void clear() {
+        // By only setting the head and tail to null, garbage collection will automatically
+        // deallocate all other elements because they are no longer being referenced anywhere
         head = null;
         tail = null;
     }
-
 }
