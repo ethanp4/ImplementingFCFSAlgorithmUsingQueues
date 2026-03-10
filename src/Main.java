@@ -30,7 +30,7 @@ static int promptForNonNegativeInt(String message, JFrame frame) {
     }
 }
 
-void main() {
+public static void main(String[] args) {
 
 
     JFrame frame = new JFrame("FCFS Simulator");
