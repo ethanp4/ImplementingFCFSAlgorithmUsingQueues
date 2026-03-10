@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
-//used to check if the user actually inputted numbers
-Boolean isStringInt(String input) {
+//used to check if the user actually inputted numbers. helper method for error handling
+static Boolean isStringInt(String input) {
     try {
         Integer.parseInt(input);
     } catch(NumberFormatException e) {
@@ -11,7 +11,28 @@ Boolean isStringInt(String input) {
     return true;
 }
 
+//Prompt for non-negative integers. helper method for error handling
+static int promptForNonNegativeInt(String message, JFrame frame) {
+    while (true) {
+        String input = JOptionPane.showInputDialog(frame, message);
+        if (input == null) System.exit(0); //user pressed cancel
+        input = input.trim();
+        if (input.isEmpty() || !isStringInt(input)) {
+            JOptionPane.showMessageDialog(frame, "Please enter a valid integer.");
+            continue;
+        }
+        int value = Integer.parseInt(input);
+        if (value < 0) {
+            JOptionPane.showMessageDialog(frame, "Please enter a non-negative integer.");
+            continue;
+        }
+        return value;
+    }
+}
+
 void main() {
+
+
     JFrame frame = new JFrame("FCFS Simulator");
 
     //Set main window to be invisible since we arent using it
@@ -31,20 +52,19 @@ void main() {
 
     // Gather the user input until it is not an empty string
     do {
-        noOfProcInput = JOptionPane.showInputDialog(frame, "Enter the number of processes: ");
-        if (noOfProcInput == null) { System.exit(0); }
-    } while (Objects.equals(noOfProcInput, "") || !isStringInt(noOfProcInput));
-    noOfProc = Integer.parseInt(noOfProcInput);;
+        noOfProcInput = String.valueOf(promptForNonNegativeInt("Enter the number of processes: ", frame));
+    } while (!isStringInt(noOfProcInput));
+    noOfProc = Integer.parseInt(noOfProcInput);
 
     // Gather arrivalTime and burstTIme for every process
     for (int i = 0; i < noOfProc; i++) {
         do {
-            arrivalTimeInput = JOptionPane.showInputDialog(frame, "Enter arrival time for process " + (i + 1));
+            arrivalTimeInput = String.valueOf(promptForNonNegativeInt("Enter arrival time for process " + (i + 1), frame));
         } while (Objects.equals(arrivalTimeInput, "") || !isStringInt(arrivalTimeInput));
         if (arrivalTimeInput == null) { System.exit(0); } else { arrivalTime = Integer.parseInt(arrivalTimeInput); };
 
         do {
-            burstTimeInput = JOptionPane.showInputDialog(frame, "Enter burst time for process " + (i + 1));
+            burstTimeInput = String.valueOf(promptForNonNegativeInt("Enter burst time for process " + (i + 1), frame));
         } while (Objects.equals(burstTimeInput, "") || !isStringInt(burstTimeInput));
         if (burstTimeInput == null) { System.exit(0); } else { burstTime = Integer.parseInt(burstTimeInput); }
 
